@@ -4,7 +4,7 @@
       <v-app-bar color="accent-4" dense>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-        <v-toolbar-title>Administrator</v-toolbar-title>
+        <v-toolbar-title>{{ $t('Administrator') }}</v-toolbar-title>
 
         <v-spacer></v-spacer>
 
@@ -16,37 +16,13 @@
       <v-navigation-drawer v-model="drawer" absolute bottom temporary>
         <v-list nav dense>
           <v-list-item-group v-model="group" active-class="text--accent-4">
-            <NuxtLink :to="localePath('/admin/dashboard')">
-              <v-list-item>
-                <v-list-item-title>{{ $t('Dashboard') }}</v-list-item-title>
-              </v-list-item>
-            </NuxtLink>
-
-            <NuxtLink :to="localePath('/admin/users')">
-              <v-list-item>
-                <v-list-item-title>{{ $t('Users') }}</v-list-item-title>
-              </v-list-item>
-            </NuxtLink>
-
-            <NuxtLink :to="localePath('/admin/notes')">
-              <v-list-item>
-                <v-list-item-title>{{ $t('Content') }}</v-list-item-title>
-              </v-list-item>
-            </NuxtLink>
-
-            <nuxt-link :to="switchLocalePath('en')">English</nuxt-link>
-            <nuxt-link :to="switchLocalePath('fr')">Français</nuxt-link>
-
-            <!-- <NuxtLink :to="$route.fullPath.replace(/^\/[^\/]+/, '')">
-              <v-list-item>
-                <v-list-item-title>English</v-list-item-title>
-              </v-list-item>
-            </NuxtLink>
-            <NuxtLink :to="`/fr` + $route.fullPath">
-              <v-list-item>
-                <v-list-item-title>French</v-list-item-title>
-              </v-list-item>
-            </NuxtLink> -->
+            <v-subheader>{{ $t('Administrator') }}</v-subheader>
+            <MenuItem :menu-title="$t('Dashboard')" :menu-path="'/admin/dashboard'" :menu-icon="'monitor-dashboard'" />
+            <MenuItem :menu-title="$t('Users')" :menu-path="'/admin/users'" :menu-icon="'account-multiple'" />
+            <MenuItem :menu-title="$t('Notes')" :menu-path="'/admin/notes'" :menu-icon="'note-multiple-outline'" />
+            <v-divider />
+            <LanguageChange :change-lang="'en'" :lang-title="'English'" />
+            <LanguageChange :change-lang="'fr'" :lang-title="'Français'" />
           </v-list-item-group>
         </v-list>
       </v-navigation-drawer>
