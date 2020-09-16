@@ -1,0 +1,15 @@
+<template>
+  <div>
+    Login
+
+    <button @click="$router.push('/')">Back</button>
+  </div>
+</template>
+
+<script>
+export default {
+  layout: 'admin',
+}
+</script>
+
+<style></style>
