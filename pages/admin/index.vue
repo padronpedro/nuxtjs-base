@@ -8,6 +8,7 @@
 
 <script>
 export default {
+  name: 'Admin',
   layout: 'admin',
 }
 </script>

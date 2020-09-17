@@ -36,6 +36,7 @@
 
 <script>
 export default {
+  name: 'LayoutAdmin',
   data: () => ({
     drawer: false,
     group: null,
