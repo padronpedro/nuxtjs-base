@@ -41,73 +41,101 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
-  let result = {
-    id: '',
-    name: '',
-    email: '',
-    roles: '',
-    permissions: '',
-    accessToken: null
-  }
-
   User.findOne({
     where: {
       email: req.body.email
     }
   })
-    .then(user => {
-      if (!user) {
+    .then(foundUser => {
+      if (!foundUser) {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      if (!user.is_active) {
+      if (!foundUser.is_active) {
         return res.status(401).send({ message: "User inactive" });
       }
 
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
-        user.password
+        foundUser.password
       );
 
       if (!passwordIsValid) {
         return res.status(401).send({
-          accessToken: null,
+          token: null,
           message: "Invalid Password!"
         });
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        // expiresIn: '10s' // 24 hours
+      var accessToken = jwt.sign({ id: foundUser.id }, config.secret, {
+        // expiresIn: '10s' // 10s
         expiresIn: 86400 // 24 hours
       });
 
-      var authorities = [];
-      var permissionList = [];
-
-      user.getRoles()
-      .then(roles => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
+      res.status(200).send({
+        'token': {
+          accessToken,
         }
-      })
-      .then(() => {
-        user.getPermissions()
-        .then(permission => {
-          for (let i = 0; i < permission.length; i++) {
-            permissionList.push(permission[i].name.toUpperCase());
-          }
-          result.id = user.id
-          result.name = user.name
-          result.email = user.email
-          result.roles = authorities
-          result.permissions = permissionList
-          result.accessToken = token
-    
-          res.status(200).send(result);
-        })  
-      })
+      });
+
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
     });
 };
+
+exports.getUser = (req, res) => {
+  try{
+    let result = {
+      id: '',
+      name: '',
+      email: '',
+      roles: '',
+      permissions: ''
+    }
+
+    User.findByPk(req.userId)
+      .then(user => {
+        if (!user) {
+          return res.status(404).send({ message: "User Not found." });
+        }
+
+        if (!user.is_active) {
+          return res.status(401).send({ message: "User inactive" });
+        }
+
+        var authorities = [];
+        var permissionList = [];
+
+        user.getRoles()
+        .then(roles => {
+          for (let i = 0; i < roles.length; i++) {
+            authorities.push("ROLE_" + roles[i].name.toUpperCase());
+          }
+        })
+        .then(() => {
+          user.getPermissions()
+          .then(permission => {
+            for (let i = 0; i < permission.length; i++) {
+              permissionList.push(permission[i].name.toUpperCase());
+            }
+            result.id = user.id
+            result.name = user.name
+            result.email = user.email
+            result.roles = authorities
+            result.permissions = permissionList
+
+            res.status(200).send(result);
+          })
+        })
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: err.message,
+          origin: 'getUser'
+        });
+      });
+  }catch(err) {
+    res.status(400).send({});
+  }
+}
