@@ -2,6 +2,7 @@
   <div>
     {{ 'Dashboard' }}
     {{ $t('welcome to') }}
+    {{ this.$auth.user }}
   </div>
 </template>
 
@@ -9,6 +10,7 @@
 export default {
   name: 'Dashboard',
   layout: 'admin',
+  middleware: 'auth',
 }
 </script>
 

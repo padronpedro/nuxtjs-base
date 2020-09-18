@@ -6,6 +6,7 @@
 export default {
   name: 'Notes',
   layout: 'admin',
+  middleware: 'auth',
 }
 </script>
 
