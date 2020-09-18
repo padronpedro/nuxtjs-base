@@ -4,8 +4,9 @@
       <v-breadcrumbs-item
         :class="{
           disabled: props.item.disabled,
-          'with-cursor': true,
+          'with-cursor': !props.item.disabled,
         }"
+        @click="redirectTo(props.item)"
       >
         {{ props.item.text }}
       </v-breadcrumbs-item>
@@ -33,15 +34,7 @@ export default {
   },
   methods: {
     redirectTo(item) {
-      if (item.params) {
-        this.$router.push({ name: item.goTo, params: item.params }).catch((err) => {
-          err = ''
-        })
-      } else {
-        this.$router.push({ name: item.goTo }).catch((err) => {
-          err = ''
-        })
-      }
+      this.$router.push(item.goTo)
     },
   },
 }
