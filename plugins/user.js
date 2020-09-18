@@ -12,3 +12,16 @@ Vue.prototype.$userCan = function (accessThis) {
     return false
   }
 }
+
+/**
+ * Check user's role
+ */
+Vue.prototype.$userRole = function (thisRole) {
+  if (this.$store.state.auth.user) {
+    return this.$store.state.auth.user.roles.find((item) => {
+      return item === thisRole
+    })
+  } else {
+    return false
+  }
+}

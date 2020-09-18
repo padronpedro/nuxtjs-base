@@ -10,6 +10,11 @@
 <script>
 export default {
   name: 'Main',
+  mounted() {
+    if (this.$userRole('ADMIN')) {
+      this.$router.push('/admin/dashboard')
+    }
+  },
 }
 </script>
 
