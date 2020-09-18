@@ -8,22 +8,34 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon>
+        <v-btn v-if="$auth.loggedIn" icon @click="logout">
           <v-icon>mdi-logout</v-icon>
+        </v-btn>
+        <v-btn v-if="!$auth.loggedIn" icon @click="$router.push('/admin')">
+          <v-icon>mdi-login</v-icon>
         </v-btn>
       </v-app-bar>
 
       <v-navigation-drawer v-model="drawer" absolute bottom temporary>
         <v-list nav dense>
-          <v-list-item-group v-model="group" active-class="text--accent-4">
+          <v-list-item-group v-if="$auth.loggedIn" v-model="group" active-class="text--accent-4">
             <v-subheader>{{ $t('Administrator') }}</v-subheader>
             <MenuItem :menu-title="$t('Dashboard')" :menu-path="'/admin/dashboard'" :menu-icon="'monitor-dashboard'" />
             <MenuItem :menu-title="$t('Users')" :menu-path="'/admin/users'" :menu-icon="'account-multiple'" />
             <MenuItem :menu-title="$t('Notes')" :menu-path="'/admin/notes'" :menu-icon="'note-multiple-outline'" />
-            <v-divider />
-            <LanguageChange :change-lang="'en'" :lang-title="'English'" />
-            <LanguageChange :change-lang="'fr'" :lang-title="'Français'" />
           </v-list-item-group>
+          <v-divider />
+          <v-list-item @click="logout">
+            <v-list-item-icon>
+              <v-icon v-text="'mdi-logout'"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="$t('Logout')"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider />
+          <LanguageChange :change-lang="'en'" :lang-title="'English'" />
+          <LanguageChange :change-lang="'fr'" :lang-title="'Français'" />
         </v-list>
       </v-navigation-drawer>
 
@@ -44,6 +56,11 @@ export default {
   watch: {
     group() {
       this.drawer = false
+    },
+  },
+  methods: {
+    async logout() {
+      await this.$auth.logout()
     },
   },
 }
