@@ -34,7 +34,10 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: [
+    '@/plugins/user.js',
+    '@/plugins/helpers.js'
+  ],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -73,6 +76,12 @@ export default {
           user: { url: '/api/auth/user', method: 'get', propertyName: false }
         }
       },
+    },
+    redirect: {
+      login: '/admin',
+      logout: '/admin',
+      callback: '/admin',
+      home: '/'
     }
   },
   /*
